@@ -95,6 +95,22 @@ enum class TextureTarget : unsigned int {
 GLenum ConvertTextureTargetToGLEnum(TextureTarget target);
 TextureTarget ConvertGLEnumToTextureTarget(GLenum target);
 
+// Check the extent represented by a proxy-texture mip level without an
+// overflowing left shift. A proxy probe receives the dimensions of the exact
+// mip level being tested; only the capability check reconstructs its level-0
+// extent.
+inline bool mg_texture_proxy_level_fits(GLsizei level_width, GLint level, GLsizei max_texture_size) {
+    if (level_width <= 0 || level < 0 || max_texture_size <= 0) return false;
+
+    unsigned long long required = static_cast<unsigned long long>(level_width);
+    const unsigned long long limit = static_cast<unsigned long long>(max_texture_size);
+    for (GLint i = 0; i < level; ++i) {
+        if (required > limit / 2u) return false;
+        required *= 2u;
+    }
+    return required <= limit;
+}
+
 class TextureObject { // TODO: Make this a more standard class
 public:
     TextureTarget target;

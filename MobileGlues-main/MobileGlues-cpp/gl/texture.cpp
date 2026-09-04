@@ -858,7 +858,7 @@ void glTexImage1D(GLenum target, GLint level, GLint internalFormat, GLsizei widt
     if (rtarget == GL_PROXY_TEXTURE_1D) {
         int max1 = 4096;
         GLES.glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max1);
-        set_gl_state_proxy_width(((width << level) > max1) ? 0 : width);
+        set_gl_state_proxy_width(mg_texture_proxy_level_fits(width, level, max1) ? width : 0);
         set_gl_state_proxy_intformat(internalFormat);
         return;
     }
@@ -925,8 +925,8 @@ void glTexImage2D(GLenum target, GLint level, GLint internalFormat, GLsizei widt
     if (rtarget == GL_PROXY_TEXTURE_2D) {
         int max1 = 4096;
         GLES.glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max1);
-        set_gl_state_proxy_width(((width << level) > max1) ? 0 : width);
-        set_gl_state_proxy_height(((height << level) > max1) ? 0 : height);
+        set_gl_state_proxy_width(mg_texture_proxy_level_fits(width, level, max1) ? width : 0);
+        set_gl_state_proxy_height(mg_texture_proxy_level_fits(height, level, max1) ? height : 0);
         set_gl_state_proxy_intformat(internalFormat);
         return;
     }
@@ -982,8 +982,8 @@ void glTexImage3D(GLenum target, GLint level, GLint internalFormat, GLsizei widt
     if (rtarget == GL_PROXY_TEXTURE_3D) {
         int max1 = 4096;
         GLES.glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max1);
-        set_gl_state_proxy_width(((width << level) > max1) ? 0 : width);
-        set_gl_state_proxy_height(((height << level) > max1) ? 0 : height);
+        set_gl_state_proxy_width(mg_texture_proxy_level_fits(width, level, max1) ? width : 0);
+        set_gl_state_proxy_height(mg_texture_proxy_level_fits(height, level, max1) ? height : 0);
         // set_gl_state_proxy_depth(((depth << level) > max1) ? 0 : depth);
         set_gl_state_proxy_intformat(internalFormat);
         return;
